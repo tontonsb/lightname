@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import TheMap from './components/TheMap.vue'
+import DataLoader from '@/components/DataLoader.vue'
+import TheMap from '@/components/TheMap.vue'
+import { useBoundaries } from '@/stores/boundaries.ts'
+
+const boundaries = useBoundaries()
 </script>
 
 <template>
     <aside>
-        <section>// Load/select dataset</section>
-
+        <DataLoader/>
+        <hr>
+        {{ boundaries.name }}
         <section>// Select names (regexes) and adjust colors // suggest names</section>
     </aside>
 

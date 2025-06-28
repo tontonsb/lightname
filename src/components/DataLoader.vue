@@ -1,0 +1,137 @@
+<script setup lang="ts">
+    import { ref, watch, computed, useTemplateRef } from 'vue'
+    import { useBoundaries } from '@/stores/boundaries.ts'
+    import adminLevels from '@/lists/admin_levels.ts'
+    import areas from '@/lists/areas.ts'
+    import presets from '@/lists/presets.ts'
+
+    const boundaries = useBoundaries()
+    const form = useTemplateRef('form')
+    const loading = ref(false)
+    const preset = ref(null)
+    const area = ref(null)
+    const level = ref(null)
+
+    const isCustom = computed(() => 'custom' === preset.value)
+
+    watch(preset, newPreset => {
+        if ('custom' === newPreset)
+            return
+
+        area.value = newPreset?.filter
+        level.value = newPreset?.admin_level
+    })
+
+    async function load() {
+        if (!area.value || !level.value) {
+            alert("Something's not quite right.")
+
+            form.value.reportValidity()
+
+            return
+        }
+
+        loading.value = true
+
+        await boundaries.load(
+            preset.value.label,
+            area.value,
+            level.value,
+        )
+
+        loading.value = false
+    }
+</script>
+
+<template>
+    <form ref=form>
+        <label>
+            Dataset
+            <select v-model="preset" required>
+                <option
+                    v-for="preset in presets"
+                    :value="preset"
+                >{{ preset.label }}</option>
+                <option value='custom'>Custom</option>
+            </select>
+        </label>
+
+        <label v-if="isCustom">
+            Area
+            <!-- TODO: implement an option for completely custom filter string -->
+            <select v-model="area" required>
+                <option
+                    v-for="area in areas"
+                    :value="area.filter"
+                >{{ area.label }}</option>
+            </select>
+        </label>
+
+        <label v-if="isCustom">
+            Administrative level (& common examples)
+            <select v-model="level" required>
+                <option
+                    v-for="level in adminLevels"
+                    :value="level.value"
+                >{{level.value}} — {{ level.examples.join('/') }}</option>
+            </select>
+
+            <small>
+                See <a href="https://wiki.openstreetmap.org/wiki/Tag:boundary%3Dadministrative#Country_specific_values_%E2%80%8B%E2%80%8Bof_the_key_admin_level=*">OSM wiki</a> for the accuratest explanation.
+            </small>
+        </label>
+
+        <button @click="load" type=button :disabled="loading">
+            {{ loading ? 'Loading...' : 'Load' }}
+        </button>
+
+        <small>
+            Thank Mr. <a href="https://www.openstreetmap.org/about">OSM</a>
+            and Mr. <a href="https://wiki.openstreetmap.org/wiki/Overpass_API">Overpass</a> for data.
+        </small>
+    </form>
+</template>
+
+<style scoped>
+form {
+    padding: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: var(--space-base);
+}
+
+select {
+    display: block;
+    width: 100%;
+    padding: var(--space-xs);
+}
+
+small {
+    display: block;
+}
+
+button {
+  width: 100%;
+  padding: var(--space-sm);
+  color: var(--color-action);
+  border: var(--border-base) solid var(--color-action);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.4s;
+}
+
+button:hover, button:focus {
+    background-color: var(--color-active);
+}
+
+button:active {
+    background-color: var(--color-background-mute);
+}
+
+button:disabled {
+    cursor: not-allowed;
+    background-color: var(--color-background-mute);
+}
+</style>
