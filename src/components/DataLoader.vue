@@ -1,58 +1,61 @@
 <script setup lang="ts">
-    import { ref, watch, computed, useTemplateRef } from 'vue'
-    import { useBoundaries } from '@/stores/boundaries.ts'
-    import adminLevels from '@/lists/admin_levels.ts'
-    import areas from '@/lists/areas.ts'
-    import presets from '@/lists/presets.ts'
+import { ref, watch, computed, useTemplateRef } from 'vue'
+import { useBoundaries } from '@/stores/boundaries.ts'
+import adminLevels from '@/lists/admin_levels.ts'
+import areas from '@/lists/areas.ts'
+import presets from '@/lists/presets.ts'
 
-    const boundaries = useBoundaries()
-    const form = useTemplateRef('form')
-    const loading = ref(false)
-    const preset = ref(null)
-    const area = ref(null)
-    const level = ref(null)
+const boundaries = useBoundaries()
+const form = useTemplateRef('form')
+const loading = ref(false)
+const preset = ref(null)
+const area = ref(null)
+const adminLevel = ref(null)
 
-    const isCustom = computed(() => 'custom' === preset.value)
+const isCustom = computed(() => 'custom' === preset.value)
 
-    watch(preset, newPreset => {
-        if ('custom' === newPreset)
-            return
+watch(preset, newPreset => {
+    if ('custom' === newPreset)
+        return
 
-        area.value = newPreset?.filter
-        level.value = newPreset?.admin_level
-    })
+    area.value = newPreset?.filter
+    adminLevel.value = newPreset?.admin_level
+})
 
-    async function load() {
-        if (!area.value || !level.value) {
-            alert("Something's not quite right.")
+// TODO: handle & display loading errors
+async function load() {
+    if (!area.value || !adminLevel.value) {
+        alert('Something\'s not quite right.')
 
-            form.value.reportValidity()
+        form.value.reportValidity()
 
-            return
-        }
-
-        loading.value = true
-
-        await boundaries.load(
-            preset.value.label,
-            area.value,
-            level.value,
-        )
-
-        loading.value = false
+        return
     }
+
+    loading.value = true
+
+    await boundaries.load(preset.value.label, area.value, adminLevel.value)
+
+    loading.value = false
+}
 </script>
 
 <template>
-    <form ref=form>
+    <form ref="form">
         <label>
             Dataset
-            <select v-model="preset" required>
+            <select
+                v-model="preset"
+                required
+            >
                 <option
-                    v-for="preset in presets"
-                    :value="preset"
-                >{{ preset.label }}</option>
-                <option value='custom'>Custom</option>
+                    v-for="presetOption in presets"
+                    :key="presetOption.id"
+                    :value="presetOption"
+                >
+                    {{ presetOption.label }}
+                </option>
+                <option value="custom">Custom</option>
             </select>
         </label>
 
@@ -61,33 +64,43 @@
             <!-- TODO: implement an option for completely custom filter string -->
             <select v-model="area" required>
                 <option
-                    v-for="area in areas"
-                    :value="area.filter"
-                >{{ area.label }}</option>
+                    v-for="areaOption in areas"
+                    :key="areaOption.filter"
+                    :value="areaOption.filter"
+                >
+                    {{ areaOption.label }}
+                </option>
             </select>
         </label>
 
         <label v-if="isCustom">
             Administrative level (& common examples)
-            <select v-model="level" required>
+            <select v-model="adminLevel" required>
                 <option
                     v-for="level in adminLevels"
+                    :key="level.value"
                     :value="level.value"
-                >{{level.value}} — {{ level.examples.join('/') }}</option>
+                >
+                    {{ level.value }} — {{ level.examples.join("/") }}
+                </option>
             </select>
 
             <small>
-                See <a href="https://wiki.openstreetmap.org/wiki/Tag:boundary%3Dadministrative#Country_specific_values_%E2%80%8B%E2%80%8Bof_the_key_admin_level=*">OSM wiki</a> for the accuratest explanation.
+                See
+                <a href="https://wiki.openstreetmap.org/wiki/Tag:boundary%3Dadministrative#Country_specific_values_%E2%80%8B%E2%80%8Bof_the_key_admin_level=*">OSM wiki</a>
+                for the accuratest explanation.
             </small>
         </label>
 
-        <button @click="load" type=button :disabled="loading">
-            {{ loading ? 'Loading...' : 'Load' }}
-        </button>
+        <button
+            type="button"
+            :disabled="loading"
+            @click="load"
+        >{{ loading ? "Loading..." : "Load" }}</button>
 
         <small>
-            Thank Mr. <a href="https://www.openstreetmap.org/about">OSM</a>
-            and Mr. <a href="https://wiki.openstreetmap.org/wiki/Overpass_API">Overpass</a> for data.
+            Thank Mr. <a href="https://www.openstreetmap.org/about">OSM</a> and Mr.
+            <a href="https://wiki.openstreetmap.org/wiki/Overpass_API">Overpass</a> for data.
         </small>
     </form>
 </template>
@@ -113,16 +126,17 @@ small {
 }
 
 button {
-  width: 100%;
-  padding: var(--space-sm);
-  color: var(--color-action);
-  border: var(--border-base) solid var(--color-action);
-  background: transparent;
-  cursor: pointer;
-  transition: background-color 0.4s;
+    width: 100%;
+    padding: var(--space-sm);
+    color: var(--color-action);
+    border: var(--border-base) solid var(--color-action);
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.4s;
 }
 
-button:hover, button:focus {
+button:hover,
+button:focus {
     background-color: var(--color-active);
 }
 

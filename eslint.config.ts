@@ -32,7 +32,7 @@ export default defineConfigWithVueTs(
             'vue/html-indent': ['warn', 4],
             'vue/singleline-html-element-content-newline': 'off',
             'vue/multiline-html-element-content-newline': 'off',
-            // Optional: enforce your preferences
+            '@typescript-eslint/no-unused-vars': 'warn',
             semi: ['warn', 'never'],
             quotes: ['warn', 'single'],
         },

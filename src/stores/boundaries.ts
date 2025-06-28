@@ -1,15 +1,13 @@
 import { defineStore } from 'pinia'
 import osmtogeojson from 'osmtogeojson'
 
-type boundaryState = {name: null|string, geodata: null|Object}
-
 export const useBoundaries = defineStore('boundaries', {
-    state: (): boundaryState => ({
-        name: null,
-        geodata: null,
+    state: () => ({
+        name: null as string|null,
+        geodata: null as object|null,
     }),
     actions: {
-        async load(name: string, filter: string, level: Number) {
+        async load(name: string, filter: string, level: number) {
             const response = await fetch('https://overpass-api.de/api/interpreter', {
                 method: 'POST',
                 body: 'data='+ encodeURIComponent(`
@@ -24,7 +22,10 @@ export const useBoundaries = defineStore('boundaries', {
 
             const osmData = await response.json()
 
-            this.geodata = osmtogeojson(osmData)
+            const geodata = osmtogeojson(osmData)
+            geodata.features = geodata.features.filter(feature => 'Point' !== feature.geometry.type)
+
+            this.geodata = geodata
             this.name = name
         },
     },
