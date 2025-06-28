@@ -1,24 +1,26 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import TheMap from './components/TheMap.vue'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <aside>
+    <section>
+      // Load/select dataset
+    </section>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+    <section>
+      // Select names (regexes) and adjust colors
+      // suggest names
+    </section>
+  </aside>
 
   <main>
-    <TheWelcome />
+    <TheMap />
   </main>
 </template>
 
 <style scoped>
-header {
+aside {
   line-height: 1.5;
 }
 
