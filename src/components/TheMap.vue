@@ -15,7 +15,7 @@ watch(geodata, (newGeodata) => {
 
     const layer = L.geoJSON(newGeodata)
     const bounds = layer.getBounds()
-    map.value.leafletObject.fitBounds(bounds)
+    map.value.leafletObject?.fitBounds(bounds)
 })
 
 function style(feature) {
@@ -34,7 +34,7 @@ function onEachFeature(feature, layer) {
         direction: 'center',
         className: 'polygon-label',
         sticky: true,
-        opacity: 0.8,
+        opacity: 0.75,
     })
 }
 </script>
@@ -95,7 +95,7 @@ function onEachFeature(feature, layer) {
     text-shadow: 1px 1px 4px var(--color-background);
 }
 
-.container >>> .polygon-label {
+.container :deep(.polygon-label) {
     pointer-events: none;
     color: var(--color-text);
     background: var(--color-background-mute);

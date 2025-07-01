@@ -15,6 +15,31 @@ a,
     padding: 3px;
 }
 
+
+button {
+    width: 100%;
+    padding: var(--space-sm);
+    color: var(--color-action);
+    border: var(--border-base) solid var(--color-action);
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.4s;
+}
+
+button:hover,
+button:focus {
+    background-color: var(--color-active);
+}
+
+button:active {
+    background-color: var(--color-background-mute);
+}
+
+button:disabled {
+    cursor: not-allowed;
+    background-color: var(--color-background-mute);
+}
+
 @media (hover: hover) {
     a:hover {
         background-color: var(--color-active);

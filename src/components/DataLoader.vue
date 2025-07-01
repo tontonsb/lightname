@@ -124,28 +124,4 @@ select {
 small {
     display: block;
 }
-
-button {
-    width: 100%;
-    padding: var(--space-sm);
-    color: var(--color-action);
-    border: var(--border-base) solid var(--color-action);
-    background: transparent;
-    cursor: pointer;
-    transition: background-color 0.4s;
-}
-
-button:hover,
-button:focus {
-    background-color: var(--color-active);
-}
-
-button:active {
-    background-color: var(--color-background-mute);
-}
-
-button:disabled {
-    cursor: not-allowed;
-    background-color: var(--color-background-mute);
-}
 </style>

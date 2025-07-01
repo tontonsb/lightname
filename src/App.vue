@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import DataLoader from '@/components/DataLoader.vue'
+import HighlightEditor from '@/components/HighlightEditor.vue'
+import NameStats from '@/components/NameStats.vue'
 import TheMap from '@/components/TheMap.vue'
-import { useBoundaries } from '@/stores/boundaries.ts'
-
-const boundaries = useBoundaries()
 </script>
 
 <template>
     <aside>
         <DataLoader />
         <hr>
-        {{ boundaries.name }}
-        <section>// Select names (regexes) and adjust colors // suggest names</section>
+        <HighlightEditor />
+        <hr>
+        <NameStats />
     </aside>
 
     <main>
