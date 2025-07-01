@@ -8,14 +8,14 @@ import presets from '@/lists/presets.ts'
 const boundaries = useBoundaries()
 const form = useTemplateRef('form')
 const loading = ref(false)
-const preset = ref(null)
-const area = ref(null)
-const adminLevel = ref(null)
+const preset = ref<'custom'|{label: string, filter: string, admin_level: number}>()
+const area = ref<string>()
+const adminLevel = ref<number>()
 
 const isCustom = computed(() => 'custom' === preset.value)
 
 watch(preset, newPreset => {
-    if ('custom' === newPreset)
+    if ('custom' === newPreset || !newPreset)
         return
 
     area.value = newPreset?.filter
@@ -24,17 +24,24 @@ watch(preset, newPreset => {
 
 // TODO: handle & display loading errors
 async function load() {
+    if (!preset.value)
+        return
+
     if (!area.value || !adminLevel.value) {
         alert('Something\'s not quite right.')
 
-        form.value.reportValidity()
+        form.value?.reportValidity()
 
         return
     }
 
     loading.value = true
 
-    await boundaries.load(preset.value.label, area.value, adminLevel.value)
+    await boundaries.load(
+        'custom' === preset.value ? area.value + ': ' + adminLevel.value.toString() : preset.value.label,
+        area.value,
+        adminLevel.value,
+    )
 
     loading.value = false
 }
@@ -50,7 +57,7 @@ async function load() {
             >
                 <option
                     v-for="presetOption in presets"
-                    :key="presetOption.id"
+                    :key="presetOption.label"
                     :value="presetOption"
                 >
                     {{ presetOption.label }}

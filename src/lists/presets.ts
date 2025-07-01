@@ -1,6 +1,6 @@
 import areas from './areas.ts'
 
-const filter = (id: string) => areas.find(a => id === a.id)?.filter
+const filter = (id: string) => areas.find(a => id === a.id)?.filter ?? null
 
 // filter should be something valid for the Overpass API
 export default [
