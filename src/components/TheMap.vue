@@ -71,7 +71,7 @@ function style(feature: Feature<Geometry>|undefined): PathOptions {
         return {
             fillOpacity: 0.5,
             weight: 1,
-            color: matches[0].color,
+            color: '#033',
             fillColor: matches[0].color,
         }
 
@@ -80,6 +80,7 @@ function style(feature: Feature<Geometry>|undefined): PathOptions {
     return {
         fillOpacity: 0.7,
         weight: 1,
+        color: '#033',
         fillColor: 'url(#' + id + ')',
     }
 }
