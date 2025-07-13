@@ -104,7 +104,6 @@ function onEachFeature(feature: Feature<Geometry>, layer: Layer) {
             v-if="name"
             class="title"
         >{{ name }}</span>
-        <span class="title">Latvia Municipalities</span>
 
         <LMap
             ref="map"
