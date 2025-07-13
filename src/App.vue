@@ -22,6 +22,7 @@ import TheMap from '@/components/TheMap.vue'
 <style scoped>
 aside {
     line-height: 1.5;
+    overflow-y: scroll;
 }
 
 main {
