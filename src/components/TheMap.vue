@@ -69,7 +69,7 @@ function style(feature: Feature<Geometry>|undefined): PathOptions {
 
     if (1 === matches.length)
         return {
-            fillOpacity: 0.5,
+            fillOpacity: 0.6,
             weight: 1,
             color: '#033',
             fillColor: matches[0].color,
