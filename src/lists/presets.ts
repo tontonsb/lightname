@@ -9,4 +9,7 @@ export default [
     {label: 'Latvia municipalities', filter: filter('lv'), admin_level: 5},
     {label: 'Philippines provinces', filter: filter('phillies'), admin_level: 4},
     {label: 'Viet Nam provinces', filter: filter('vietnam'), admin_level: 4},
+
+    // thailand
+    // england (shires & folks)
 ]
