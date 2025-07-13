@@ -24,7 +24,7 @@ function add() {
 <template>
     <table>
         <thead>
-            <tr><th>Word</th> <th>Color</th><th /></tr>
+            <tr><th>Term</th> <th>Color</th><th /></tr>
         </thead>
         <tbody>
             <tr v-for="entry in list" :key="entry.term">
@@ -36,7 +36,15 @@ function add() {
                         type="color"
                     >
                 </td>
-                <td />
+                <td>
+                    <button
+                        type="button"
+                        class="clear"
+                        @click="() => highlitableStore.remove(entry.term)"
+                    >
+                        ✕
+                    </button>
+                </td>
             </tr>
         </tbody>
         <tfoot>
@@ -75,5 +83,10 @@ table {
 
 th {
     text-align: left;
+}
+
+button.clear {
+    border: none;
+    padding: 0;
 }
 </style>
