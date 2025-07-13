@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import 'leaflet/dist/leaflet.css'
 import type { Feature, Geometry } from 'geojson'
-import type { PathOptions, Layer, GeoJSON } from 'leaflet'
+import type { PathOptions, Layer } from 'leaflet'
 import { ref, watch, useTemplateRef } from 'vue'
 import { storeToRefs } from 'pinia'
 import { LMap, LTileLayer, LGeoJson } from '@vue-leaflet/vue-leaflet'
@@ -26,6 +26,7 @@ watch(geodata, (newGeodata) => {
 
 watch(hLightList, () => {
     if (lGeojson.value) {
+        patterns.value.clear() // remove old patterns
         lGeojson.value.leafletObject?.setStyle(style)
     }
 }, { deep: true })
@@ -59,24 +60,26 @@ function style(feature: Feature<Geometry>|undefined): PathOptions {
 
     if (!matches.length)
         return {
-            fillOpacity: 0.2,
+            fillOpacity: 0.1,
             weight: 1,
             color: '#033',
+            fillColor: '#033',
         }
 
     if (1 === matches.length)
         return {
-            fillOpacity: 0.4,
+            fillOpacity: 0.5,
             weight: 1,
-            color: matches[0].color
+            color: matches[0].color,
+            fillColor: matches[0].color,
         }
 
     const id = getPattern(matches.map(m => m.color))
 
     return {
-        fillOpacity: 0.4,
-        color: matches[0].color,
-        fillColor: 'url(#' + id + ')'
+        fillOpacity: 0.7,
+        weight: 1,
+        fillColor: 'url(#' + id + ')',
     }
 }
 
