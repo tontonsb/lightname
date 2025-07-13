@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import 'leaflet/dist/leaflet.css'
-import { watch, useTemplateRef } from 'vue'
+import type { Feature, Geometry } from 'geojson'
+import type { PathOptions, Layer, GeoJSON } from 'leaflet'
+import { ref, watch, useTemplateRef } from 'vue'
 import { storeToRefs } from 'pinia'
 import { LMap, LTileLayer, LGeoJson } from '@vue-leaflet/vue-leaflet'
 import { useBoundaries } from '@/stores/boundaries.ts'
+import { useHighlitables } from '@/stores/highlitables.ts'
 
 const map = useTemplateRef('map')
+const lGeojson = useTemplateRef('lgeojson')
 const boundaries = useBoundaries()
 const { name, geodata } = storeToRefs(boundaries)
+const highlitables = useHighlitables()
+const { list: hLightList } = storeToRefs(highlitables)
 
 watch(geodata, (newGeodata) => {
     if (!newGeodata || !map.value)
@@ -18,13 +24,63 @@ watch(geodata, (newGeodata) => {
     map.value.leafletObject?.fitBounds(bounds)
 })
 
-function style(feature) {
-    // console.log('st')
+watch(hLightList, () => {
+    if (lGeojson.value) {
+        lGeojson.value.leafletObject?.setStyle(style)
+    }
+}, { deep: true })
 
-    return {}
+const patterns = ref(new Map<string, {id: string, colors: string[]}>())
+function getPattern(colors: string[]) {
+    const key = colors.sort((a, b) => a.localeCompare(b)).join()
+
+    if (patterns.value.has(key)) {
+        return patterns.value.get(key)!.id
+    }
+
+    const id = crypto.randomUUID()
+
+    patterns.value.set(key, {id, colors})
+
+    return id
 }
 
-function onEachFeature(feature, layer) {
+function style(feature: Feature<Geometry>|undefined): PathOptions {
+    if (!feature)
+        return {}
+
+    const name = feature.properties?.name || feature.properties?.['name:en']
+    const matches = name ? hLightList.value.filter(highlitable => {
+        if (name.includes(highlitable.term))
+            return true
+
+        return false
+    }) : []
+
+    if (!matches.length)
+        return {
+            fillOpacity: 0.2,
+            weight: 1,
+            color: '#033',
+        }
+
+    if (1 === matches.length)
+        return {
+            fillOpacity: 0.4,
+            weight: 1,
+            color: matches[0].color
+        }
+
+    const id = getPattern(matches.map(m => m.color))
+
+    return {
+        fillOpacity: 0.4,
+        color: matches[0].color,
+        fillColor: 'url(#' + id + ')'
+    }
+}
+
+function onEachFeature(feature: Feature<Geometry>, layer: Layer) {
     const name = feature.properties?.name || feature.properties?.['name:en']
 
     if (!name)
@@ -71,12 +127,36 @@ function onEachFeature(feature, layer) {
             -->
             <LGeoJson
                 v-if="geodata"
+                ref="lgeojson"
                 :geojson="geodata"
                 :options-style="style"
                 :options="{ onEachFeature }"
             />
         </LMap>
     </div>
+
+    <svg>
+        <defs>
+            <pattern
+                v-for="[key, pattern] in patterns"
+                :id="pattern.id"
+                :key="key"
+                :width="3 * pattern.colors.length"
+                height="6"
+                patternTransform="rotate(45)"
+                patternUnits="userSpaceOnUse"
+            >
+                <rect
+                    v-for="(color, index) in pattern.colors"
+                    :key="color"
+                    :x="3 * index"
+                    width="3"
+                    height="6"
+                    :fill="color"
+                />
+            </pattern>
+        </defs>
+    </svg>
 </template>
 
 <style scoped>

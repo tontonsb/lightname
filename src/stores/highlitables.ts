@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { hasInjectionContext } from 'vue'
 
 // Tableau 20
 const palette = [
