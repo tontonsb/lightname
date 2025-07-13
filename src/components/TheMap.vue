@@ -50,9 +50,10 @@ function style(feature: Feature<Geometry>|undefined): PathOptions {
     if (!feature)
         return {}
 
-    const name = feature.properties?.name || feature.properties?.['name:en']
+    const name = (feature.properties?.name || feature.properties?.['name:en'] || '').toLowerCase()
     const matches = name ? hLightList.value.filter(highlitable => {
-        if (name.includes(highlitable.term))
+        // TODO: support regex or other more "controllable" matcher
+        if (name.includes(highlitable.term.toLowerCase()))
             return true
 
         return false
