@@ -27,11 +27,11 @@ export default [
         highlights: [
             {
                 name: 'Directions',
-                terms: ['oriental', 'occidental', 'norte', 'sur'],
+                terms: ['oriental', 'occidental', 'norte', 'sur', 'east', 'west', 'north', 'south'],
             },
             {
                 name: 'Regions',
-                terms: ['Davao', 'Surigao', 'Zamboanga', 'Agusan', 'Cotabato', 'Misamis', 'Lanao', 'Negros', 'Samara', 'Leyte', 'Mindoro', 'Camarines', 'Ilocos']
+                terms: ['Davao', 'Surigao', 'Zamboanga', 'Agusan', 'Cotabato', 'Misamis', 'Lanao', 'Negros', 'Samar', 'Leyte', 'Mindoro', 'Camarines', 'Ilocos', 'Maguindanao']
             },
         ],
     },
