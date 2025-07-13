@@ -3,14 +3,16 @@ import { ref, watch, computed, useTemplateRef } from 'vue'
 import { useBoundaries } from '@/stores/boundaries.ts'
 import adminLevels from '@/lists/admin_levels.ts'
 import areas from '@/lists/areas.ts'
-import presets from '@/lists/presets.ts'
+import presets, { type dataPreset } from '@/lists/presets.ts'
+import { useHighlightPresets } from '@/stores/presets.ts'
 
 const boundaries = useBoundaries()
 const form = useTemplateRef('form')
 const loading = ref(false)
-const preset = ref<'custom'|{label: string, filter: string, admin_level: number}>()
+const preset = ref<'custom'|dataPreset>()
 const area = ref<string>()
 const adminLevel = ref<number>()
+const highlightPresets = useHighlightPresets()
 
 const isCustom = computed(() => 'custom' === preset.value)
 
@@ -42,6 +44,11 @@ async function load() {
         area.value,
         adminLevel.value,
     )
+
+    highlightPresets.clear()
+    if ('custom' !== preset.value && preset.value.highlights?.length) {
+        highlightPresets.load(preset.value.highlights)
+    }
 
     loading.value = false
 }
@@ -114,7 +121,7 @@ async function load() {
 
 <style scoped>
 form {
-    padding: 1rem;
+    padding: var(--space-base);
 }
 
 label {

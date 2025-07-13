@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, useTemplateRef, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useHighlitables } from '@/stores/highlitables.ts'
+import { useHighlightPresets } from '@/stores/presets.ts'
+
+const presetSelector = useTemplateRef('presetSelector')
 
 const highlitableStore = useHighlitables()
 const { list } = storeToRefs(highlitableStore)
+
+const presetStore = useHighlightPresets()
+const { list: presets } = storeToRefs(presetStore)
 
 const addable = ref({
     term: '',
@@ -19,9 +25,36 @@ function add() {
     addable.value.term = ''
     addable.value.color = highlitableStore.nextColor
 }
+
+function loadPreset(event: Event) {
+    const index = Number((event.target as HTMLSelectElement).value)
+    const terms = presets.value[index]?.terms ?? []
+console.log(highlitableStore)
+    highlitableStore.clear()
+    highlitableStore.load(terms)
+
+    if (presetSelector.value) {
+        presetSelector.value.value = 'null'
+    }
+}
 </script>
 
 <template>
+    <div v-if="presets.length" class="preset-selector">
+        <select ref="presetSelector" @change="loadPreset">
+            <option
+                disabled
+                selected
+                value="null"
+            >Load from preset...</option>
+            <option
+                v-for="(preset, index) in presets"
+                :key="index"
+                :value="index"
+            >{{ preset.name }}</option>
+        </select>
+    </div>
+
     <table>
         <thead>
             <tr><th>Term</th> <th>Color</th><th /></tr>
@@ -76,6 +109,15 @@ function add() {
 </template>
 
 <style scoped>
+div.preset-selector {
+    padding: var(--space-base);
+}
+
+select {
+    width: 100%;
+    padding: var(--space-xs);
+}
+
 table {
     padding: var(--space-base);
     width: 100%;

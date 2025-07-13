@@ -45,5 +45,11 @@ export const useHighlitables = defineStore('highlitables', {
                 ...patch,
             }
         },
+        clear() {
+            this.list = []
+        },
+        load(terms: string[]) {
+            terms.forEach(term => this.add(term))
+        },
     },
 })
