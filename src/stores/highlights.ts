@@ -8,7 +8,7 @@ const palette = [
     '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
 ]
 
-export const useHighlitables = defineStore('highlitables', {
+export const useHighlights = defineStore('highlights', {
     state: () => ({
         list: [] as {term: string, color: string}[],
     }),

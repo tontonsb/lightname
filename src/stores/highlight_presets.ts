@@ -1,4 +1,4 @@
-import type { highlightPreset } from '@/lists/presets.ts'
+import type { highlightPreset } from '@/lists/data_presets.ts'
 import { defineStore } from 'pinia'
 
 export const useHighlightPresets = defineStore('highlightPresets', {

@@ -2,9 +2,9 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useBoundaries } from '@/stores/boundaries.ts'
-import { useHighlitables } from '@/stores/highlitables.ts'
+import { useHighlights } from '@/stores/highlights.ts'
 
-const highlitableStore = useHighlitables()
+const highlitableStore = useHighlights()
 const boundaries = useBoundaries()
 const { geodata } = storeToRefs(boundaries)
 

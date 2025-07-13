@@ -1,37 +1,37 @@
 <script setup lang="ts">
 import { ref, useTemplateRef, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useHighlitables } from '@/stores/highlitables.ts'
-import { useHighlightPresets } from '@/stores/presets.ts'
+import { useHighlights } from '@/stores/highlights.ts'
+import { useHighlightPresets } from '@/stores/highlight_presets.ts'
 
 const presetSelector = useTemplateRef('presetSelector')
 
-const highlitableStore = useHighlitables()
-const { list } = storeToRefs(highlitableStore)
+const highlightStore = useHighlights()
+const { list: highlights } = storeToRefs(highlightStore)
 
 const presetStore = useHighlightPresets()
 const { list: presets } = storeToRefs(presetStore)
 
 const addable = ref({
     term: '',
-    color: highlitableStore.nextColor,
+    color: highlightStore.nextColor,
 })
 
-watch(() => highlitableStore.nextColor, newColor => addable.value.color = newColor)
+watch(() => highlightStore.nextColor, newColor => addable.value.color = newColor)
 
 function add() {
-    highlitableStore.add(addable.value.term, addable.value.color)
+    highlightStore.add(addable.value.term, addable.value.color)
 
     addable.value.term = ''
-    addable.value.color = highlitableStore.nextColor
+    addable.value.color = highlightStore.nextColor
 }
 
 function loadPreset(event: Event) {
     const index = Number((event.target as HTMLSelectElement).value)
     const terms = presets.value[index]?.terms ?? []
-console.log(highlitableStore)
-    highlitableStore.clear()
-    highlitableStore.load(terms)
+
+    highlightStore.clear()
+    highlightStore.load(terms)
 
     if (presetSelector.value) {
         presetSelector.value.value = 'null'
@@ -60,7 +60,7 @@ console.log(highlitableStore)
             <tr><th>Term</th> <th>Color</th><th /></tr>
         </thead>
         <tbody>
-            <tr v-for="entry in list" :key="entry.term">
+            <tr v-for="entry in highlights" :key="entry.term">
                 <td>{{ entry.term }}</td>
                 <td>
                     <input
@@ -73,7 +73,7 @@ console.log(highlitableStore)
                     <button
                         type="button"
                         class="clear"
-                        @click="() => highlitableStore.remove(entry.term)"
+                        @click="() => highlightStore.remove(entry.term)"
                     >
                         ✕
                     </button>

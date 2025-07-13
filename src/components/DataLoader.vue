@@ -2,9 +2,9 @@
 import { ref, watch, computed, useTemplateRef } from 'vue'
 import { useBoundaries } from '@/stores/boundaries.ts'
 import adminLevels from '@/lists/admin_levels.ts'
-import areas from '@/lists/areas.ts'
-import presets, { type dataPreset } from '@/lists/presets.ts'
-import { useHighlightPresets } from '@/stores/presets.ts'
+import areas from '@/lists/area_presets'
+import presets, { type dataPreset } from '@/lists/data_presets.ts'
+import { useHighlightPresets } from '@/stores/highlight_presets.ts'
 
 const boundaries = useBoundaries()
 const form = useTemplateRef('form')

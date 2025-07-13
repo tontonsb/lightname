@@ -1,30 +1,30 @@
 <script setup lang="ts">
 import 'leaflet/dist/leaflet.css'
 import type { Feature, Geometry } from 'geojson'
-import type { PathOptions, Layer } from 'leaflet'
+import { type PathOptions, type Layer, geoJSON } from 'leaflet'
 import { ref, watch, useTemplateRef } from 'vue'
 import { storeToRefs } from 'pinia'
 import { LMap, LTileLayer, LGeoJson } from '@vue-leaflet/vue-leaflet'
 import { useBoundaries } from '@/stores/boundaries.ts'
-import { useHighlitables } from '@/stores/highlitables.ts'
+import { useHighlights } from '@/stores/highlights.ts'
 
 const map = useTemplateRef('map')
 const lGeojson = useTemplateRef('lgeojson')
 const boundaries = useBoundaries()
 const { name, geodata } = storeToRefs(boundaries)
-const highlitables = useHighlitables()
-const { list: hLightList } = storeToRefs(highlitables)
+const highlightStore = useHighlights()
+const { list: highlights } = storeToRefs(highlightStore)
 
 watch(geodata, (newGeodata) => {
     if (!newGeodata || !map.value)
         return
 
-    const layer = L.geoJSON(newGeodata)
+    const layer = geoJSON(newGeodata)
     const bounds = layer.getBounds()
     map.value.leafletObject?.fitBounds(bounds)
 })
 
-watch(hLightList, () => {
+watch(highlights, () => {
     if (lGeojson.value) {
         patterns.value.clear() // remove old patterns
         lGeojson.value.leafletObject?.setStyle(style)
@@ -51,9 +51,9 @@ function style(feature: Feature<Geometry>|undefined): PathOptions {
         return {}
 
     const name = (feature.properties?.name || feature.properties?.['name:en'] || '').toLowerCase()
-    const matches = name ? hLightList.value.filter(highlitable => {
+    const matches = name ? highlights.value.filter(highlight => {
         // TODO: support regex or other more "controllable" matcher
-        if (name.includes(highlitable.term.toLowerCase()))
+        if (name.includes(highlight.term.toLowerCase()))
             return true
 
         return false

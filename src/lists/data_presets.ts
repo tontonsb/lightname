@@ -1,10 +1,9 @@
-import areas from './areas.ts'
+import areas from './area_presets.ts'
 
 const filter = (id: string) => areas.find(a => id === a.id)?.filter ?? null
 
-export type highlightPreset = {name: string, terms: string}[]
+export type highlightPreset = {name: string, terms: string[]}
 export type dataPreset = {label: string, filter: string, admin_level: number, highlights: highlightPreset[]}
-
 
 // filter should be something valid for the Overpass API
 export default [
