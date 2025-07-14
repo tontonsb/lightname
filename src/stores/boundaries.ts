@@ -1,6 +1,7 @@
 import type { FeatureCollection } from 'geojson'
 import { defineStore } from 'pinia'
 import osmtogeojson from 'osmtogeojson'
+import simplify from '@turf/simplify'
 
 export const useBoundaries = defineStore('boundaries', {
     state: () => ({
@@ -26,7 +27,12 @@ export const useBoundaries = defineStore('boundaries', {
             const geodata = osmtogeojson(osmData)
             geodata.features = geodata.features.filter(feature => 'Point' !== feature.geometry.type)
 
-            this.geodata = geodata
+            this.geodata = simplify(geodata, {
+                tolerance: 0.002,
+                highQuality: false,
+                mutate: true,
+            })
+
             this.name = name
         },
     },
