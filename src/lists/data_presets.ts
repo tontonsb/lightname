@@ -12,7 +12,16 @@ export default [
         label: 'Indonesia kabupaten & kotas',
         filter: filter('indo'),
         admin_level: 5,
-        highlights: [],
+        highlights: [
+            {
+                name: 'Directions',
+                terms: ['timur', 'barat', 'utara', 'selatan', 'tengah', 'pusat', 'tenggara'],
+            },
+            {
+                name: 'Rivers',
+                terms: ['Kapuas', 'Barito', 'Musi', 'Banyuasin', 'Ogan', 'Komering', 'Indragiri', 'Rokan'],
+            },
+        ],
     },
     {
         label: 'Latvia municipalities',
@@ -39,7 +48,16 @@ export default [
         label: 'Viet Nam provinces',
         filter: filter('vietnam'),
         admin_level: 4,
-        highlights: [],
+        highlights: [
+            {
+                name: 'Directions',
+                terms: ['Bắc', 'Nam', 'Trung', 'Đông', 'Tây'],
+            },
+            {
+                name: 'Common Suffixes',
+                terms: ['Giang', 'Hà', 'Sơn', 'Thủy', 'Lâm', 'Phú', 'Long', 'An', 'Bình'],
+            },
+        ],
     },
 
     // thailand
