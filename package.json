@@ -11,7 +11,8 @@
     "test:e2e": "playwright test",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "cache-geodata": "tsx scripts/cacheGeodata.ts"
   },
   "dependencies": {
     "@turf/simplify": "^7.2.0",
@@ -39,6 +40,7 @@
     "jsdom": "^26.1.0",
     "leaflet": "^1.9.4",
     "npm-run-all2": "^8.0.4",
+    "tsx": "^4.20.3",
     "typescript": "~5.8.0",
     "vite": "^7.0.0",
     "vite-plugin-eslint": "^1.8.1",

@@ -1,6 +1,6 @@
 import areas from './area_presets.ts'
 
-const filter = (id: string) => areas.find(a => id === a.id)?.filter ?? null
+const filter = (id: string) => areas.find(a => id === a.id)?.filter ?? ''
 
 export type highlightPreset = {name: string, terms: string[]}
 export type dataPreset = {label: string, filter: string, admin_level: number, highlights: highlightPreset[]}
