@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
+// @ts-expect-error broken types due to exports
 import eslint from 'vite-plugin-eslint'
 
 // https://vite.dev/config/
